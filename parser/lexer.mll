@@ -60,13 +60,13 @@ rule token = parse
   | "#NAME"    space+ (mident as md) { NAME    (get_loc lexbuf , mk_mident md) }
   | "#REQUIRE" space+ (mident as md) { REQUIRE (get_loc lexbuf , mk_mident md) }
   | "#EVAL"     { EVAL       ( get_loc lexbuf ) }
-  | "#INFER"    { INFER ( get_loc lexbuf ) }
+  | "#INFER"    { INFER      ( get_loc lexbuf ) }
   | "#CHECK"    { CHECK      ( get_loc lexbuf ) }
   | "#CHECKNOT" { CHECKNOT   ( get_loc lexbuf ) }
   | "#ASSERT"   { ASSERT     ( get_loc lexbuf ) }
   | "#ASSERTNOT"{ ASSERTNOT  ( get_loc lexbuf ) }
-  | "#PRINT"    { PRINT ( get_loc lexbuf ) }
-  | "#GDT"      { GDT ( get_loc lexbuf ) }
+  | "#PRINT"    { PRINT      ( get_loc lexbuf ) }
+  | "#GDT"      { GDT        ( get_loc lexbuf ) }
   | (mident as md) '.' (ident as id)
   { QID (get_loc lexbuf , mk_mident md, mk_ident id) }
   | non_neg_num as s
@@ -87,7 +87,7 @@ rule token = parse
   { ID  ( get_loc lexbuf , mk_ident id ) }
   | '"' { string (Buffer.create 42) lexbuf }
   | _   as s
-  { Errors.fail (get_loc lexbuf) "Unexpected characters '%s'." (String.make 1 s) }
+  { fail (get_loc lexbuf) "Unexpected characters '%s'." (String.make 1 s) }
   | eof { EOF }
 
 and comment = parse
@@ -106,4 +106,4 @@ and string buf = parse
   | _ as c
   { Buffer.add_char buf c; string buf lexbuf }
   | eof
-  { Errors.fail (get_loc lexbuf) "Unexpected end of file." }
+  { fail (get_loc lexbuf) "Unexpected end of file." }
