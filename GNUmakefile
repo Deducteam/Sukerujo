@@ -102,6 +102,7 @@ full_tests: all tests/external_tests.sh
 
 clean:
 	$(Q)ocamlbuild -quiet -clean
+	$(Q)rm -f builtins.dko
 
 distclean: clean
 	$(Q)find -name "*~" -exec rm {} \;
