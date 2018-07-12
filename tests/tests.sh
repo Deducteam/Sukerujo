@@ -41,6 +41,20 @@ for i in tests/OK/*.dk ; do
 	fi ;
 done
 
+./skcheck.native -nk -q -nc -coc -e builtins.dk &> /dev/null
+
+for i in tests/OK/*.sk ; do
+	total=$((total+1)) ;
+    echo -n "$i..." ;
+    if ./skcheck.native -q -nc -coc "$i" 2>&1 | uniq -c | egrep  "^ *[0-9]*(1|3|5|7|9) .*" | egrep -v -q "^ *1 SUCCESS.*" ;
+	then
+		echo -e "\033[0;31mKO\033[0m"
+	else
+		passed=$((passed+1)) ;
+		echo -e "\033[0;32mOK\033[0m"
+	fi ;
+done
+
 for i in tests/KO/*.dk ; do
 	total=$((total+1)) ;
     echo -n "$i...  " ;

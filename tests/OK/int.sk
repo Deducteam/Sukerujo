@@ -4,8 +4,8 @@ int : Type.
 def make : nat -> nat -> int.
 [ n, m ] make (S n) (S m) --> make n m.
 
-def + : nat -> int.
-[ n ] + n --> make n 0.
+def pos : nat -> int.
+[ n ] pos n --> make n 0.
 
-def - : nat -> int.
-[ n ] - n --> make 0 n.
+def neg : nat -> int.
+[ n ] neg n --> make 0 n.
