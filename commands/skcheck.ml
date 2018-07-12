@@ -4,7 +4,7 @@ open Parser
 open Entry
 
 let eprint lc fmt =
-  Format.eprintf fmt
+  Format.ifprintf Format.std_formatter fmt
 
 let mk_entry md e =
   match e with
