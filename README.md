@@ -6,6 +6,8 @@ instead of the last stable version by typing the following commands in
 the current directory:
 - opam pin -k git add sukerujo .#sukerujo
 
+Warnings are generated but this is a bug of Dedukti (see issue [#93](https://github.com/Deducteam/Dedukti/issues/93))
+
 USER MANUAL FOR DEDUKTI (DEVELOPMENT VERSION)
 =============================================
 
