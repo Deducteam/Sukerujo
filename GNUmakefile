@@ -15,13 +15,15 @@ PARSER_GEN := parser/menhir_parser.mly parser/lexer.mll
 .PHONY: parser
 parser: _build/parser/parser.cma _build/parser/parser.cmxa
 
+DK_PACKAGE = -package dedukti.api -package dedukti.kernel
+
 _build/parser/parser.cma: $(PARSER_MLI) $(PARSER_ML) $(PARSER_GEN)
 	@echo "[BYT] $@"
-	$(Q)ocamlbuild -quiet -use-ocamlfind -package dedukti.kernel parser/parser.cma
+	$(Q)ocamlbuild -quiet -use-ocamlfind $(DK_PACKAGE) parser/parser.cma
 
 _build/parser/parser.cmxa: $(PARSER_MLI) $(PARSER_ML) $(PARSER_GEN)
 	@echo "[OPT] $@"
-	$(Q)ocamlbuild -quiet -use-ocamlfind -package dedukti.kernel parser/parser.cmxa
+	$(Q)ocamlbuild -quiet -use-ocamlfind $(DK_PACKAGE) parser/parser.cmxa
 
 #### Compilation of the Sukerujo suite ########################################
 
@@ -31,15 +33,15 @@ commands: skcheck.native skdep.native sktop.native
 
 skcheck.native: parser commands/skcheck.ml
 	@echo "[OPT] $@"
-	$(Q)ocamlbuild -quiet -use-ocamlfind -package dedukti.kernel commands/skcheck.native
+	$(Q)ocamlbuild -quiet -use-ocamlfind $(DK_PACKAGE) commands/skcheck.native
 
 skdep.native: parser commands/skdep.ml
 	@echo "[OPT] $@"
-	$(Q)ocamlbuild -quiet -use-ocamlfind -package dedukti.kernel commands/skdep.native
+	$(Q)ocamlbuild -quiet -use-ocamlfind $(DK_PACKAGE) commands/skdep.native
 
 sktop.native: parser commands/sktop.ml
 	@echo "[OPT] $@"
-	$(Q)ocamlbuild -quiet -use-ocamlfind -package dedukti.kernel commands/sktop.native
+	$(Q)ocamlbuild -quiet -use-ocamlfind $(DK_PACKAGE) commands/sktop.native
 
 #### Generation of the META file #############################################
 

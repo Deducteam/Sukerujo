@@ -22,9 +22,7 @@ let type_of_ctx ctx =
 
 let type_of ctx a =
   let ctx' = type_of_ctx ctx in
-  match Env.infer ~ctx:ctx' a with
-  | OK(ty) -> ty
-  | Err(err) -> Errors.fail_env_error err
+  Env.infer ~ctx:ctx' a
 
 let rec t_of_pt md (ctx:(ident * term option) list) (pte:preterm) : term =
   let t_of_pt = t_of_pt md in
@@ -126,7 +124,7 @@ let scope_rule md (l,pname,pctx,md_opt,id,pargs,pri:prule) : untyped_rule =
   let top = PPattern(l,md_opt,id,pargs) in
   let ctx, unused_vars = get_vars_order pctx top in
   if unused_vars
-  then warn "Local variables in the rule %a are not used (%a)"
+  then Debug.(debug D_warn) "Local variables in the rule %a are not used (%a)"
       pp_prule (l,pname,pctx,md_opt,id,pargs,pri) pp_loc l;
   let idents = List.map snd ctx in
   let b,id =
