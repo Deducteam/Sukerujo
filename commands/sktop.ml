@@ -55,6 +55,7 @@ let  _ =
     try List.iter handle_entry (read str) with
     | End_of_file      -> exit 0
     | Parse_error(_,s) -> Printf.eprintf "Parse error: %s\n%!" s
+    | Env.EnvError (l, Env.ParseError s) -> Errors.fail_env_error l (Env.ParseError s)
     | e                ->
         Printf.eprintf "Uncaught exception %S\n%!" (Printexc.to_string e)
   done

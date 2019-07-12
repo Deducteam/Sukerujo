@@ -150,6 +150,10 @@ let _ =
         if not !beautify then
           Errors.success "Standard input was successfully checked.\n"
   with
+  | Parse_error(loc,msg) ->
+      let (l,c) = of_loc loc in
+      Printf.eprintf "Parse error at (%i,%i): %s\n" l c msg;
+      exit 1
   | Env.EnvError (l,e) -> Errors.fail_env_error l e
   | Sys_error err      -> Printf.eprintf "ERROR %s.\n" err; exit 1
   | Exit               -> exit 3
