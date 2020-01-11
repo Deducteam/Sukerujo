@@ -121,7 +121,7 @@ open Entry
                   (pre_subst (List.map field_proj_subst fields) field_type)
                   (params @ [PDecl(lf, rec_name, rec_type)]))));
           (* Define the projection *)
-          Entry.Rules [
+          Entry.Rules (lc,[
             scope_rule md (
               lf,
               None,
@@ -133,23 +133,20 @@ open Entry
                            None,
                            constr,
                            param_and_field_patterns field_name)],
-              PreId (lf, field_name))]])
+              PreId (lf, field_name))])])
         fields)
 
 let mk_config loc id1 id2_opt =
   try
     let open Env in
     let some i = Some(int_of_string i) in
-    let config nb_steps strategy = {default_cfg with nb_steps; strategy} in
+    let config nb_steps target = {default_cfg with nb_steps; target} in
     match (id1, id2_opt) with
     | ("SNF" , None       ) -> config None     Snf
-    | ("HNF" , None       ) -> config None     Hnf
     | ("WHNF", None       ) -> config None     Whnf
     | ("SNF" , Some i     ) -> config (some i) Snf
-    | ("HNF" , Some i     ) -> config (some i) Hnf
     | ("WHNF", Some i     ) -> config (some i) Whnf
     | (i     , Some "SNF" ) -> config (some i) Snf
-    | (i     , Some "HNF" ) -> config (some i) Hnf
     | (i     , Some "WHNF") -> config (some i) Whnf
     | (i     , None       ) -> {default_cfg with nb_steps = some i}
     | (_     , _          ) -> raise Exit (* captured bellow *)
@@ -157,6 +154,9 @@ let mk_config loc id1 id2_opt =
 
 let mk_lst f md = [f md]
 
+let loc_of_rule = function
+    | []                  -> assert false
+    | (lc,_,_,_,_,_,_)::_ -> lc
 %}
 
 %token EOF
@@ -238,7 +238,7 @@ line            : ID COLON letterm DOT
                 | KW_THM ID param+ DEF letterm DOT
                 { mk_lst (fun md -> Def (fst $2, snd $2, true, None, scope_term md [] (mk_lam $5 $3))) }
                 | rule+ DOT
-                { mk_lst (fun md -> Rules (List.map (scope_rule md) $1)) }
+                { mk_lst (fun md -> Rules (loc_of_rule $1, List.map (scope_rule md) $1)) }
                 | RECORD ID DEF ID LEFTBRA def_context RIGHTBRA DOT
                 { fun md -> mk_record_type md $2 [] $4 $6 }
                 | RECORD ID param+ DEF ID LEFTBRA def_context RIGHTBRA DOT
